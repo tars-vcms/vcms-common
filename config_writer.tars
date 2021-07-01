@@ -1,0 +1,61 @@
+module vcms
+{
+
+	enum ConfigStatus{
+		Online = 1,
+		Offline
+	};
+
+	struct ConfigEntity{
+		0 require unsigned int Ident;
+		1 require ConfigStatus Status;
+		2 require string Secret;
+		3 require string Comment;
+		4 require unsigned int CreatedAt;
+	};
+
+	struct CreateConfigReq{
+		0 require string Ident;
+	};
+
+	struct CreateConfigRsp{
+		0 require ConfigEntity Config;
+	};
+
+	struct DeleteConfigReq{
+		0 require string Ident;
+	};
+
+	struct DeleteConfigRsp{
+		0  require ConfigEntity Config;
+	};
+
+	struct UpdateConfigReq{
+		0 require ConfigEntity Config;
+	};
+
+	struct UpdateConfigRsp{
+		0 require ConfigEntity Config;
+	};
+
+	struct GetConfigReq{
+		0 require string Ident;
+	};
+
+	struct GetConfigRsp{
+		0 require ConfigEntity Config;
+	};
+
+	interface ConfigWriter
+	{
+
+		int CreateConfig(CreateConfigReq req, out CreateConfigRsp rsp);
+
+		int DeleteConfig(DeleteConfigReq req, out DeleteConfigReq rsp);
+
+		int UpdateConfig(UpdateConfigReq req, out UpdateConfigRsp rsp);
+
+		int GetConfig(GetConfigReq req, out GetConfigRsp rsp);
+
+	};
+};
