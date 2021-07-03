@@ -145,11 +145,6 @@ func Msg(e error) string {
 
 // HandleError 将报错信息打包到context中
 func HandleError(ctx context.Context, err error) (int32, error) {
-	//error为空直接返回
-	if err == nil {
-		return RetOK, nil
-	}
-
 	k, ok := current.GetResponseContext(ctx)
 	if !ok {
 		//无法获取context 直接抛出error
@@ -159,12 +154,18 @@ func HandleError(ctx context.Context, err error) (int32, error) {
 	if k == nil {
 		k = make(map[string]string)
 	}
+	ret := 0
+	msg := "success"
+	//error为空直接返回
+	if err == nil {
+		return RetOK, nil
+	} else {
+		ret = Code(err)
+		msg = Msg(err)
+	}
 
-	ret := Code(err)
-
-	//将msg,show注入到上下文
 	k["tars-ret"] = strconv.Itoa(ret)
-	k["tars-msg"] = Msg(err)
+	k["tars-msg"] = msg
 	ok = current.SetResponseContext(ctx, k)
 	if ok {
 		return int32(ret), nil
