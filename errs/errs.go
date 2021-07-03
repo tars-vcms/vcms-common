@@ -157,9 +157,7 @@ func HandleError(ctx context.Context, err error) (int32, error) {
 	ret := 0
 	msg := "success"
 	//error为空直接返回
-	if err == nil {
-		return RetOK, nil
-	} else {
+	if err != nil {
 		ret = Code(err)
 		msg = Msg(err)
 	}
