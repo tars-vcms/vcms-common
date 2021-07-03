@@ -11,7 +11,7 @@ module vcmsconfig
 		1 require ConfigStatus Status;
 		2 require string Secret;
 		3 require string Comment;
-		4 require unsigned int CreatedAt;
+		4 require long CreatedAt;
 	};
 
 	struct CreateConfigReq{

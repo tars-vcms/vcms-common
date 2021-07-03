@@ -26,7 +26,7 @@ type ConfigEntity struct {
 	Status    ConfigStatus `json:"Status"`
 	Secret    string       `json:"Secret"`
 	Comment   string       `json:"Comment"`
-	CreatedAt uint32       `json:"CreatedAt"`
+	CreatedAt int64        `json:"CreatedAt"`
 }
 
 func (st *ConfigEntity) ResetDefault() {
@@ -60,7 +60,7 @@ func (st *ConfigEntity) ReadFrom(_is *codec.Reader) error {
 		return err
 	}
 
-	err = _is.Read_uint32(&st.CreatedAt, 4, true)
+	err = _is.Read_int64(&st.CreatedAt, 4, true)
 	if err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func (st *ConfigEntity) WriteTo(_os *codec.Buffer) error {
 		return err
 	}
 
-	err = _os.Write_uint32(st.CreatedAt, 4)
+	err = _os.Write_int64(st.CreatedAt, 4)
 	if err != nil {
 		return err
 	}
