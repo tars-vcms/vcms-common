@@ -1,4 +1,4 @@
-module vcms
+module vcmsconfig
 {
 
 	enum ConfigStatus{
@@ -7,7 +7,7 @@ module vcms
 	};
 
 	struct ConfigEntity{
-		0 require unsigned int Ident;
+		0 require string Ident;
 		1 require ConfigStatus Status;
 		2 require string Secret;
 		3 require string Comment;
