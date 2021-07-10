@@ -144,11 +144,11 @@ func Msg(e error) string {
 }
 
 // HandleError 将报错信息打包到context中
-func HandleError(ctx context.Context, err error) (int32, error) {
+func HandleError(ctx context.Context, err error) error {
 	k, ok := current.GetResponseContext(ctx)
 	if !ok {
 		//无法获取context 直接抛出error
-		return RetServerContextErr, err
+		return err
 	}
 	//判断ctx中是否已经初始化
 	if k == nil {
@@ -166,9 +166,9 @@ func HandleError(ctx context.Context, err error) (int32, error) {
 	k["tars-msg"] = msg
 	ok = current.SetResponseContext(ctx, k)
 	if ok {
-		return int32(ret), nil
+		return nil
 	} else {
-		return int32(ret), err
+		return err
 	}
 
 }
