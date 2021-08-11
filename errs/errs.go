@@ -19,9 +19,11 @@ type Error struct {
 	st []uintptr // 调用栈
 }
 
-// Success 成功提示字符串
+// SUCCESS 成功提示字符串
 const (
-	Success = "success"
+	SUCCESS  = "success"
+	TARS_RET = "tars-ret"
+	TARS_MSG = "tars-msg"
 )
 
 var (
@@ -40,7 +42,7 @@ const (
 // Error 实现error接口，返回error描述
 func (e *Error) Error() string {
 	if e == nil {
-		return Success
+		return SUCCESS
 	}
 	return fmt.Sprintf("code:%d, msg:%s", e.Code, e.Msg)
 }
@@ -131,14 +133,14 @@ func Code(e error) int {
 // Msg 通过error获取error msg
 func Msg(e error) string {
 	if e == nil {
-		return Success
+		return SUCCESS
 	}
 	err, ok := e.(*Error)
 	if !ok {
 		return e.Error()
 	}
 	if err == (*Error)(nil) {
-		return Success
+		return SUCCESS
 	}
 	return err.Msg
 }
@@ -155,20 +157,39 @@ func HandleError(ctx context.Context, err error) error {
 		k = make(map[string]string)
 	}
 	ret := 0
-	msg := "success"
+	msg := SUCCESS
 	//error为空直接返回
 	if err != nil {
 		ret = Code(err)
 		msg = Msg(err)
 	}
 
-	k["tars-ret"] = strconv.Itoa(ret)
-	k["tars-msg"] = msg
+	k[TARS_RET] = strconv.Itoa(ret)
+	k[TARS_MSG] = msg
 	ok = current.SetResponseContext(ctx, k)
 	if ok {
 		return nil
 	} else {
 		return err
 	}
+}
 
+func CatchError(ctx context.Context) error {
+	k, ok := current.GetResponseContext(ctx)
+	if !ok {
+		return errors.New("can not get context from response")
+	}
+	r, ok := k[TARS_RET]
+	if !ok {
+		return nil
+	}
+	ret, err := strconv.Atoi(r)
+	if err != nil {
+		return err
+	}
+	msg := k[TARS_MSG]
+	if ret == 0 {
+		return nil
+	}
+	return New(ret, msg)
 }
