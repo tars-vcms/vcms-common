@@ -174,12 +174,8 @@ func HandleError(ctx context.Context, err error) error {
 	}
 }
 
-func CatchError(ctx context.Context) error {
-	k, ok := current.GetResponseContext(ctx)
-	if !ok {
-		return errors.New("can not get context from response")
-	}
-	r, ok := k[TARS_RET]
+func CatchError(ctx map[string]string) error {
+	r, ok := ctx[TARS_RET]
 	if !ok {
 		return nil
 	}
@@ -187,7 +183,7 @@ func CatchError(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	msg := k[TARS_MSG]
+	msg := ctx[TARS_MSG]
 	if ret == 0 {
 		return nil
 	}
